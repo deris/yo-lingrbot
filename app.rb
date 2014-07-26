@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'bundler'
 Bundler.require
 require 'yaml'
@@ -43,12 +42,12 @@ post '/' do
     last_yo = LastYoAll.first
     if messages.length >= FEVER_COUNT and
        (last_yo.nil? or
-        not LastYoAll.first(:created_at.lt => YO_INTERVAL.minute.ago).nil?) then
+        not LastYoAll.first(:created_at.lt => YO_INTERVAL.minute.ago).nil?)
       Net::HTTP.post_form(
         URI.parse('http://api.justyo.co/yoall/'),
         {api_token: YoConfig.api_token(e['message']['room'])},
       )
-      if last_yo then
+      if last_yo
         last_yo.update(:created_at => DateTime.now)
       else
         LastYoAll.create(:created_at => DateTime.now)
