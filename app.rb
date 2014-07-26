@@ -2,12 +2,10 @@ require 'bundler'
 Bundler.require
 require 'yaml'
 require 'json'
-require 'uri'
-require 'net/http'
 require 'date'
 require './model.rb'
-require './yoconfig.rb'
 require './customfixnum.rb'
+require './yoapi.rb'
 
 using CustomFixnumForTime
 
@@ -43,10 +41,7 @@ post '/' do
     if messages.length >= FEVER_COUNT and
        (last_yo.nil? or
         not LastYoAll.first(:created_at.lt => YO_INTERVAL.minute.ago).nil?)
-      Net::HTTP.post_form(
-        URI.parse('http://api.justyo.co/yoall/'),
-        {api_token: YoConfig.api_token(e['message']['room'])},
-      )
+      YoApi.yo_all(e['message']['room'])
       if last_yo
         last_yo.update(:created_at => DateTime.now)
       else
@@ -57,13 +52,7 @@ post '/' do
     if /^!Yo\s+(\w+)$/ =~ e['message']['text']
       username = $1
       if YoUser.first(:username => username.upcase)
-        Net::HTTP.post_form(
-          URI.parse('http://api.justyo.co/yo/'),
-          {
-            api_token: YoConfig.api_token(e['message']['room']),
-            username: username,
-          },
-        )
+        YoApi.yo(e['message']['room'], username)
       end
     end
     ''
