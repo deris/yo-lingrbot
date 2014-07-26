@@ -12,6 +12,19 @@ using CustomFixnumForTime
 FEVER_COUNT  = 15
 FEVER_MINUTE = 5
 YO_INTERVAL  = 10
+HELP_MESSAGE = <<EOS
+Lingr部屋が盛り上がってきたらYoで通知します
+他にも以下の機能を提供します
+
+!Yo [member]   : memberで指定したYoアカウントにYoを送ります
+!Yo -help      : ヘルプを表示します
+!Yo -member    : !Yo [member]で指定できるmemberのリストを表示します
+
+!Yo [member]でのYoの通知は、あらかじめそのYoアカウントが
+Bot用のYoアカウントにYoを送り登録されている必要があります
+Bot用のYoアカウントは[room名]LINGRのような名前で作成されているはずです
+登録を解除したい場合は再度Bot用のYoアカウントにYoを送ります
+EOS
 
 get '/' do
   'Yo for Lingr'
@@ -49,13 +62,18 @@ post '/' do
       end
     end
 
-    if /^!Yo\s+(\w+)$/ =~ e['message']['text']
+    case e['message']['text']
+    when /^!Yo\s+(\w+)$/
       username = $1
       if YoUser.first(:username => username.upcase)
         YoApi.yo(e['message']['room'], username)
       end
+      ''
+    when /^!Yo\s+-help$/
+      HELP_MESSAGE
+    else
+      ''
     end
-    ''
   end
 end
 
