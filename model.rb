@@ -1,5 +1,5 @@
-require 'dm-core'
-require 'dm-migrations'
+require 'bundler'
+Bundler.require
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || 'sqlite:db/test.db')
 
@@ -18,6 +18,13 @@ class LastYoAll
   include DataMapper::Resource
   property :id, Serial
   property :created_at, DateTime
+  auto_upgrade!
+end
+
+class YoUser
+  include DataMapper::Resource
+  property :id, Serial
+  property :username, String
   auto_upgrade!
 end
 

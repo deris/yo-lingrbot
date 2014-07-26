@@ -53,7 +53,30 @@ post '/' do
         LastYoAll.create(:created_at => DateTime.now)
       end
     end
+
+    if /^!Yo\s+(\w+)$/ =~ e['message']['text']
+      username = $1
+      if YoUser.first(:username => username.upcase)
+        Net::HTTP.post_form(
+          URI.parse('http://api.justyo.co/yo/'),
+          {
+            api_token: YoConfig.api_token(e['message']['room']),
+            username: username,
+          },
+        )
+      end
+    end
     ''
+  end
+end
+
+get '/yo/callback' do
+  # 直接Yoを送るユーザを制限するために、DBに登録しておく
+  user = YoUser.first(:username => params[:username])
+  if user.nil?
+    YoUser.create(:username => params[:username])
+  else
+    user.destroy
   end
 end
 
