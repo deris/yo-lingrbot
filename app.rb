@@ -1,11 +1,11 @@
 require 'rubygems'
+require 'bundler'
+Bundler.require
 require 'yaml'
 require 'json'
 require 'uri'
 require 'net/http'
 require 'date'
-require 'dm-core'
-require 'sinatra'
 require './model.rb'
 require './yoconfig.rb'
 require './customfixnum.rb'
