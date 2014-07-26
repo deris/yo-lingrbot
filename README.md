@@ -6,15 +6,14 @@ Summary
 
 - Lingr部屋の会話が盛り上がった時にYoで通知する
 - Yoで一度通知したらその後盛り上がっても特定の時間経過するまでは通知しない
-- config.ymlに記載した部屋だけ対応する
+- 環境変数に記載した部屋だけ対応する
 
-### config.yml
+### 環境変数
+
+環境変数に部屋を記載するルールは以下
 
 ```
-# config.yml
-[room名]:
-  api_token: [YoアカウントのAPI token]
-# 必要なroom分上記を記載
+$yolingr_apitoken_[Lingrの部屋ID]
 ```
 
 Future work
