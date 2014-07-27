@@ -68,8 +68,8 @@ post '/' do
 
     case e['message']['text']
     when /^!Yo\s+(\w+)$/
-      username = $1
-      if YoUser.first(:username => username.upcase)
+      username = $1.upcase
+      if YoUser.first(:username => username)
         YoApi.yo(api_token, username)
       end
       ''
