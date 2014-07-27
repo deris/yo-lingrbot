@@ -8,7 +8,6 @@ Summary
 - Yoで一度通知したらその後盛り上がっても特定の時間経過するまでは通知しない
 - DBに登録したLingr部屋だけ対応する
 - !Yo [Yoアカウント名]でYoを通知する
-- Callback URLで、Yoできるメンバーを限定する(Yoしたら登録し、再度Yoしたら登録解除)
 - !Yo -helpでへルプを表示
 - !Yo -memberでYo通知できるメンバーのリストを表示
 - !Yo -yoaccountでLingr部屋に対応するYoアカウント名を表示
