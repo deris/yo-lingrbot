@@ -19,10 +19,11 @@ Lingr部屋が盛り上がってきたらYoで通知します
 !Yo [member]   : memberで指定したYoアカウントにYoを送ります
 !Yo -help      : ヘルプを表示します
 !Yo -member    : !Yo [member]で指定できるmemberのリストを表示します
+!Yo -yoaccount : 現在のLingr部屋に対応するYoアカウント名を表示します
 
 !Yo [member]でのYoの通知は、あらかじめそのYoアカウントが
 Bot用のYoアカウントにYoを送り登録されている必要があります
-Bot用のYoアカウントは[room名]LINGRのような名前で作成されているはずです
+Bot用のYoアカウントは!Yo -yoaccountで表示できます
 登録を解除したい場合は再度Bot用のYoアカウントにYoを送ります
 EOS
 
