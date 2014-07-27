@@ -28,3 +28,12 @@ class YoUser
   auto_upgrade!
 end
 
+class LingrRoom
+  include DataMapper::Resource
+  property :id, Serial
+  property :name, String
+  property :yo_username, String
+  property :yo_api_token, String
+  auto_upgrade!
+end
+

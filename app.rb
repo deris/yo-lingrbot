@@ -37,8 +37,8 @@ post '/' do
 
   json['events'].select { |e| e['message'] }.map do |e|
     m = e['message']
-    api_token = YoConfig.api_token(m['room'])
-    return '' if api_token.nil?
+    room = LingrRoom.first(:name => m['room'])
+    return '' if room.nil?
 
     MessageInfo.create(
       :room       => m['room'],
@@ -59,7 +59,7 @@ post '/' do
     if messages.length >= FEVER_COUNT and
        (last_yo.nil? or
         not LastYoAll.first(:created_at.lt => YO_INTERVAL.minute.ago).nil?)
-      YoApi.yo_all(api_token)
+       YoApi.yo_all(room.yo_api_token)
       if last_yo
         last_yo.update(:created_at => DateTime.now)
       else
@@ -71,7 +71,7 @@ post '/' do
     when /^!Yo\s+(\w+)$/
       username = $1.upcase
       if YoUser.first(:username => username)
-        YoApi.yo(api_token, username)
+        YoApi.yo(room.yo_api_token, username)
       end
       ''
     when /^!Yo\s+-help$/
