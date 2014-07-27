@@ -67,18 +67,18 @@ post '/' do
     end
 
     case m['text']
-    when /^!Yo\s+(\w+)$/
+    when /^![Yy]o\s+(\w+)$/
       username = $1.upcase
       if YoUser.first(:username => username)
         YoApi.yo(room.yo_api_token, username)
       end
       ''
-    when /^!Yo\s+-help$/
+    when /^![Yy]o\s+-help$/
       HELP_MESSAGE
-    when /^!Yo\s+-member$/
+    when /^![Yy]o\s+-member$/
       users = YoUser.all
       users.map {|u| u.username}.join("\n")
-    when /^!Yo\s+-yoaccount$/
+    when /^![Yy]o\s+-yoaccount$/
       room.yo_username.upcase
     else
       ''
