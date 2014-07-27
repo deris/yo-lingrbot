@@ -5,7 +5,6 @@ require 'json'
 require 'date'
 require './model.rb'
 require './customfixnum.rb'
-require './yoconfig.rb'
 require './yoapi.rb'
 
 using CustomFixnumForTime
