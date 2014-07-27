@@ -36,15 +36,16 @@ post '/' do
   json = JSON.parse(request.body.string)
 
   json['events'].select { |e| e['message'] }.map do |e|
-    api_token = YoConfig.api_token(e['message']['room'])
+    m = e['message']
+    api_token = YoConfig.api_token(m['room'])
     return '' if api_token.nil?
 
     MessageInfo.create(
-      :room       => e['message']['room'],
-      :speaker_id => e['message']['speaker_id'],
-      :nickname   => e['message']['nickname'],
-      :text       => e['message']['text'],
-      :created_at => DateTime.parse(e['message']['timestamp']),
+      :room       => m['room'],
+      :speaker_id => m['speaker_id'],
+      :nickname   => m['nickname'],
+      :text       => m['text'],
+      :created_at => DateTime.parse(m['timestamp']),
     )
 
     # DBからFEVER_MINUTE分前以前のデータ削除
@@ -66,7 +67,7 @@ post '/' do
       end
     end
 
-    case e['message']['text']
+    case m['text']
     when /^!Yo\s+(\w+)$/
       username = $1.upcase
       if YoUser.first(:username => username)
