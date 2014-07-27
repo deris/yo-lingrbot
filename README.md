@@ -11,6 +11,7 @@ Summary
 - Callback URLで、Yoできるメンバーを限定する(Yoしたら登録し、再度Yoしたら登録解除)
 - !Yo -helpでへルプを表示
 - !Yo -memberでYo通知できるメンバーのリストを表示
+- !Yo -yoaccountでLingr部屋に対応するYoアカウント名を表示
 
 ### db/seed.rb
 

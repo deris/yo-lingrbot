@@ -79,6 +79,8 @@ post '/' do
     when /^!Yo\s+-member$/
       users = YoUser.all
       users.map {|u| u.username}.join("\n")
+    when /^!Yo\s+-yoaccount$/
+      room.yo_username.upcase
     else
       ''
     end
