@@ -36,6 +36,9 @@ post '/' do
   json = JSON.parse(request.body.string)
 
   json['events'].select { |e| e['message'] }.map do |e|
+    api_token = YoConfig.api_token(e['message']['room'])
+    return '' if api_token.nil?
+
     MessageInfo.create(
       :room       => e['message']['room'],
       :speaker_id => e['message']['speaker_id'],
@@ -55,7 +58,7 @@ post '/' do
     if messages.length >= FEVER_COUNT and
        (last_yo.nil? or
         not LastYoAll.first(:created_at.lt => YO_INTERVAL.minute.ago).nil?)
-      YoApi.yo_all(YoConfig.api_token(e['message']['room']))
+      YoApi.yo_all(api_token)
       if last_yo
         last_yo.update(:created_at => DateTime.now)
       else
@@ -67,7 +70,7 @@ post '/' do
     when /^!Yo\s+(\w+)$/
       username = $1
       if YoUser.first(:username => username.upcase)
-        YoApi.yo(YoConfig.api_token(e['message']['room']), username)
+        YoApi.yo(api_token, username)
       end
       ''
     when /^!Yo\s+-help$/
