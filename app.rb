@@ -71,6 +71,9 @@ post '/' do
       ''
     when /^!Yo\s+-help$/
       HELP_MESSAGE
+    when /^!Yo\s+-member$/
+      users = YoUser.all
+      users.map {|u| u.username}.join("\n")
     else
       ''
     end

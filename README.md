@@ -10,6 +10,7 @@ Summary
 - !Yo [member]で特定のメンバーにYoを通知する
 - Callback URLで、Yoできるメンバーを限定する(Yoしたら登録し、再度Yoしたら登録解除)
 - !Yo -helpでへルプを表示
+- !Yo -memberでYo通知できるメンバーのリストを表示
 
 ### 環境変数
 
@@ -22,5 +23,4 @@ $yolingr_apitoken_[Lingrの部屋ID]
 Future work
 ===
 - Yoの通知はバックグラウンドでLingrに負荷をかけないようにする
-- !Yo -memberでYo通知できるメンバーをリストアップ
 
