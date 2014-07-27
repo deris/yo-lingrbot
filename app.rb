@@ -5,6 +5,7 @@ require 'json'
 require 'date'
 require './model.rb'
 require './customfixnum.rb'
+require './yoconfig.rb'
 require './yoapi.rb'
 
 using CustomFixnumForTime
@@ -54,7 +55,7 @@ post '/' do
     if messages.length >= FEVER_COUNT and
        (last_yo.nil? or
         not LastYoAll.first(:created_at.lt => YO_INTERVAL.minute.ago).nil?)
-      YoApi.yo_all(e['message']['room'])
+      YoApi.yo_all(YoConfig.api_token(e['message']['room']))
       if last_yo
         last_yo.update(:created_at => DateTime.now)
       else
@@ -66,7 +67,7 @@ post '/' do
     when /^!Yo\s+(\w+)$/
       username = $1
       if YoUser.first(:username => username.upcase)
-        YoApi.yo(e['message']['room'], username)
+        YoApi.yo(YoConfig.api_token(e['message']['room']), username)
       end
       ''
     when /^!Yo\s+-help$/
