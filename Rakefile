@@ -24,6 +24,17 @@ task 'db:delete' do
   Database.new.connect.migrate!
 end
 
+desc 'Add Lingr Room Info'
+task 'yo:add', 'name', 'yo_username', 'yo_api_token'
+task 'yo:add' do |task, args|
+  puts 'Adding Lingr Room Info...'
+  LingrRoom.create!(
+    :name         => args.name,
+    :yo_username  => args.yo_username,
+    :yo_api_token => args.yo_api_token,
+  )
+end
+
 desc 'Reset database'
 task 'db:reset' => %w(db:delete db:seed)
 
