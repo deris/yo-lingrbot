@@ -16,12 +16,14 @@ HELP_MESSAGE = <<EOS
 Lingr部屋が盛り上がってきたらYoで通知します
 他にも以下の機能を提供します
 
-!Yo [member]   : memberで指定したYoアカウントにYoを送ります
-!Yo -help      : ヘルプを表示します
-!Yo -member    : !Yo [member]で指定できるmemberのリストを表示します
-!Yo -yoaccount : 現在のLingr部屋に対応するYoアカウント名を表示します
+!Yo [Yoアカウント名]      : 指定したYoアカウントにYoを送ります
+!Yo -add [Yoアカウント名] : !Yo [Yoアカウント名]で通知可能なYoアカウントを追加する(1ユーザ、1Yoアカウントだけ登録可能)
+!Yo -delete               : !Yo [Yoアカウント名]で通知可能なYoアカウントを削除する
+!Yo -member               : !Yo [Yoアカウント名]で指定できるYoアカウント名のリストを表示します
+!Yo -yoaccount            : 現在のLingr部屋に対応するYoアカウント名を表示します
+!Yo -help                 : ヘルプを表示します
 
-!Yo [member]でのYoの通知は、あらかじめそのYoアカウントが
+!Yo [Yoアカウント]でのYoの通知は、あらかじめそのYoアカウントが
 Bot用のYoアカウントにYoを送り登録されている必要があります
 Bot用のYoアカウントは!Yo -yoaccountで表示できます
 登録を解除したい場合は再度Bot用のYoアカウントにYoを送ります
@@ -76,6 +78,18 @@ post '/' do
       ''
     when /^![Yy]o\s+-help$/
       HELP_MESSAGE
+    when /^![Yy]o\s+-add\s+(\w+)$/
+      user = YoUser.first(:lingr_id => m['speaker_id'])
+      if user.nil?
+        YoUser.create(
+          :username => $1,
+          :lingr_id => m['speaker_id'],
+        )
+      else
+        user.update(:username => $1)
+      end
+    when /^![Yy]o\s+-delete$/
+      YoUser.first(:lingr_id => m['speaker_id']).destroy
     when /^![Yy]o\s+-member$/
       users = YoUser.all
       users.map {|u| u.username}.join("\n")
@@ -84,16 +98,6 @@ post '/' do
     else
       ''
     end
-  end
-end
-
-get '/yo/callback' do
-  # 直接Yoを送るユーザを制限するために、DBに登録しておく
-  user = YoUser.first(:username => params[:username])
-  if user.nil?
-    YoUser.create(:username => params[:username])
-  else
-    user.destroy
   end
 end
 

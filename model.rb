@@ -25,6 +25,7 @@ class YoUser
   include DataMapper::Resource
   property :id, Serial
   property :username, String
+  property :lingr_id, String
   auto_upgrade!
 end
 
