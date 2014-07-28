@@ -95,8 +95,10 @@ post '/' do
       else
         user.update(:username => $1)
       end
+      ''
     when /^![Yy]o\s+-delete$/
       YoUser.first(:lingr_id => m['speaker_id']).destroy
+      ''
     when /^![Yy]o\s+-member$/
       users = YoUser.all
       users.map {|u| u.username}.join("\n")
