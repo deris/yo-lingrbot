@@ -53,8 +53,15 @@ post '/' do
     # DBからFEVER_MINUTE分前以前のデータ削除
     MessageInfo.all(:created_at.lt => FEVER_MINUTE.minute.ago).destroy
 
-    # DBから過去のデータ取得
-    messages = MessageInfo.all
+    # DBから過去のデータ取得(連投は１つの投稿とする)
+    prev = nil
+    messages = MessageInfo.all.select do |info|
+      same_as_prev = (not prev.nil? and
+                      info['room'] == prev['room'] and
+                      info['speaker_id'] == prev['speaker_id'])
+      prev = info
+      not same_as_prev
+    end
 
     # Lingr部屋が盛り上がっていて、かつ前回Yo allしてからYO_INTERVAL分以上経過していた場合
     last_yo = LastYoAll.first
