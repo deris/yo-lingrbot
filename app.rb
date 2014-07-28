@@ -11,7 +11,7 @@ using CustomFixnumForTime
 
 FEVER_COUNT  = 15
 FEVER_MINUTE = 5
-YO_INTERVAL  = 10
+YO_INTERVAL  = 30
 HELP_MESSAGE = <<EOS
 Lingr部屋が盛り上がってきたらYoで通知します
 他にも以下の機能を提供します
