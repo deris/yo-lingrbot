@@ -133,7 +133,7 @@ post '/' do
       "!Yo -helpでコマンドの引数を確認してください"
     else
       YoUser.all(:lingr_id.not => m['speaker_id']).select { |u|
-        u and /#{u.pattern}/ =~ m['text']
+        u and u.pattern and /#{u.pattern}/ =~ m['text']
       }.map { |u|
         YoApi.yo(room.yo_api_token, u.username)
       }
