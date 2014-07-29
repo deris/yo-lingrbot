@@ -56,11 +56,9 @@ post '/' do
     # DBから過去のデータ取得(連投は１つの投稿とする)
     prev = nil
     messages = MessageInfo.all.select do |info|
-      same_as_prev = (not prev.nil? and
-                      info['room'] == prev['room'] and
-                      info['speaker_id'] == prev['speaker_id'])
-      prev = info
-      not same_as_prev
+      not (prev and
+           info['room'] == prev['room'] and
+           info['speaker_id'] == prev['speaker_id']).tap {prev = info}
     end
 
     # Lingr部屋が盛り上がっていて、かつ前回Yo allしてからYO_INTERVAL分以上経過していた場合
