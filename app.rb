@@ -128,9 +128,6 @@ post '/' do
       rescue
         "指定したパターンが不正です:/#{pattern}/"
       end
-    when /^![Yy]o\b/
-      "!Yoに指定する引数が不正です\n" +
-      "!Yo -helpでコマンドの引数を確認してください"
     else
       YoUser.all(:lingr_id.not => m['speaker_id']).select { |u|
         u and u.pattern and /#{u.pattern}/ =~ m['text']
