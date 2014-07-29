@@ -103,7 +103,11 @@ post '/' do
       ''
     when /^![Yy]o\s+-member$/
       users = YoUser.all
-      users.map {|u| u.username}.join("\n")
+      if users.empty?
+        'メンバーが登録されていません'
+      else
+        users.map {|u| u.username}.join("\n")
+      end
     when /^![Yy]o\s+-yoaccount$/
       room.yo_username.upcase
     when /^![Yy]o\s+-pattern$/
