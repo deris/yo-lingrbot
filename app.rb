@@ -86,10 +86,10 @@ post '/' do
     when /^![Yy]o\s+-add\s+(\w+)$/
       user = YoUser.first(:lingr_id => m['speaker_id'])
       if user
-        user.update(:username => $1)
+        user.update(:username => $1.upcase)
       else
         YoUser.create(
-          :username => $1,
+          :username => $1.upupcase,
           :lingr_id => m['speaker_id'],
         )
       end
