@@ -65,7 +65,7 @@ post '/' do
     last_yo = LastYoAll.first
     if messages.length >= FEVER_COUNT and
        (last_yo.nil? or
-        not LastYoAll.first(:created_at.lt => YO_INTERVAL.minute.ago).nil?)
+        LastYoAll.first(:created_at.lt => YO_INTERVAL.minute.ago))
        YoApi.yo_all(room.yo_api_token)
       if last_yo
         last_yo.update(:created_at => DateTime.now)
@@ -85,13 +85,13 @@ post '/' do
       HELP_MESSAGE
     when /^![Yy]o\s+-add\s+(\w+)$/
       user = YoUser.first(:lingr_id => m['speaker_id'])
-      if user.nil?
+      if user
+        user.update(:username => $1)
+      else
         YoUser.create(
           :username => $1,
           :lingr_id => m['speaker_id'],
         )
-      else
-        user.update(:username => $1)
       end
       ''
     when /^![Yy]o\s+-delete$/
