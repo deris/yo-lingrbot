@@ -124,7 +124,7 @@ post '/' do
 
         user = YoUser.first(:lingr_id => m['speaker_id'])
         if user
-          user.update(:pattern => pattern=='' ? nil : pattern)
+          user.update(:pattern => pattern.empty? ? nil : pattern)
           ''
         else
           'パターンを登録する前に!Yo -add でYoアカウントを登録する必要があります'
