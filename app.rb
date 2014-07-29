@@ -77,9 +77,7 @@ post '/' do
     case m['text']
     when /^![Yy]o\s+(\w+)$/
       username = $1.upcase
-      if YoUser.first(:username => username)
-        YoApi.yo(room.yo_api_token, username)
-      end
+      YoApi.yo(room.yo_api_token, username) if YoUser.first(:username => username)
       ''
     when /^![Yy]o\s+-help$/
       HELP_MESSAGE
