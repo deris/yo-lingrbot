@@ -103,6 +103,9 @@ post '/' do
       users.map {|u| u.username}.join("\n")
     when /^![Yy]o\s+-yoaccount$/
       room.yo_username.upcase
+    when /^![Yy]o\b/
+      "!Yoに指定する引数が不正です\n" +
+      "!Yo -helpでコマンドの引数を確認してください"
     else
       ''
     end
