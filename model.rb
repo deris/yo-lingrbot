@@ -26,6 +26,7 @@ class YoUser
   property :id, Serial
   property :username, String
   property :lingr_id, String
+  property :pattern, String
   auto_upgrade!
 end
 

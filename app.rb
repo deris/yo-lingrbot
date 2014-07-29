@@ -26,6 +26,9 @@ Lingr部屋が盛り上がってきたらYoで通知します
 !Yo -add [Yoアカウント名] : !Yo [Yoアカウント名]で通知可能なYoアカウントを追加します(1ユーザ、1Yoアカウントだけ登録可能)
 !Yo -delete               : !Yo [Yoアカウント名]で通知可能なYoアカウントを削除します
 !Yo -member               : !Yo [Yoアカウント名]で指定できるYoアカウント名のリストを表示します
+!Yo -pattern /パターン/   : パターンを//内に設定できます。設定したパターンにマッチする投稿があった場合、
+                          : !Yo -addで登録したYoアカウントにYoを送ります
+!Yo -pattern              : !Yo -pattern /パターン/で登録したパターンを表示します
 !Yo -help                 : ヘルプを表示します
 
 !Yo [Yoアカウント]でのYoの通知は、あらかじめそのYoアカウントが
@@ -103,10 +106,37 @@ post '/' do
       users.map {|u| u.username}.join("\n")
     when /^![Yy]o\s+-yoaccount$/
       room.yo_username.upcase
+    when /^![Yy]o\s+-pattern$/
+      user = YoUser.first(:lingr_id => m['speaker_id'])
+      if user and user.pattern
+        "/#{user.pattern}/"
+      else
+        'パターンが登録されていません'
+      end
+    when /^![Yy]o\s+-pattern\s+\/(.*)\/$/
+      pattern = $1
+      begin
+        Regexp.compile(pattern)
+
+        user = YoUser.first(:lingr_id => m['speaker_id'])
+        if user
+          user.update(:pattern => pattern=='' ? nil : pattern)
+          ''
+        else
+          'パターンを登録する前に!Yo -add でYoアカウントを登録する必要があります'
+        end
+      rescue
+        "指定したパターンが不正です:/#{pattern}/"
+      end
     when /^![Yy]o\b/
       "!Yoに指定する引数が不正です\n" +
       "!Yo -helpでコマンドの引数を確認してください"
     else
+      YoUser.all(:lingr_id.not => m['speaker_id']).select { |u|
+        u and /#{u.pattern}/ =~ m['text']
+      }.map { |u|
+        YoApi.yo(room.yo_api_token, u.username)
+      }
       ''
     end
   end
