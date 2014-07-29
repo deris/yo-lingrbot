@@ -93,7 +93,7 @@ post '/' do
         user.update(:username => $1.upcase)
       else
         YoUser.create(
-          :username => $1.upupcase,
+          :username => $1.upcase,
           :lingr_id => m['speaker_id'],
         )
       end
