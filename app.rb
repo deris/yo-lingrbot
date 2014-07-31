@@ -60,12 +60,9 @@ post '/' do
     MessageInfo.all(:created_at.lt => FEVER_MINUTE.minute.ago).destroy
 
     # DBから過去のデータ取得(連投は１つの投稿とする)
-    prev = nil
-    messages = MessageInfo.all.select do |info|
-      not (prev and
-           info.room == prev.room and
-           info.speaker_id == prev.speaker_id).tap {prev = info}
-    end
+    messages = MessageInfo.all.chunk {|mi|
+      [mi.room, mi.speaker_id]
+    }.map {|_, v| v.first}
 
     # Lingr部屋が盛り上がっていて、かつ前回Yo allしてからYO_INTERVAL分以上経過していた場合
     if messages.length >= FEVER_COUNT and
