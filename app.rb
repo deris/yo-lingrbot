@@ -72,11 +72,8 @@ post '/' do
        LastYoAll.first(:created_at.lt => YO_INTERVAL.minute.ago)
       YoApi.yo_all(room.yo_api_token)
       LastYoAll.first.tap do |last_yo|
-        if last_yo
-          last_yo.update(:created_at => DateTime.now)
-        else
-          LastYoAll.create(:created_at => DateTime.now)
-        end
+        last_yo ? last_yo.update(:created_at => DateTime.now)
+                : LastYoAll.create(:created_at => DateTime.now)
       end
     end
 
