@@ -39,3 +39,12 @@ class LingrRoom
   auto_upgrade!
 end
 
+class WaitForUser
+  include DataMapper::Resource
+  property :id, Serial
+  property :lingr_id, String
+  property :target_user, String
+  property :created_at, DateTime
+  auto_upgrade!
+end
+

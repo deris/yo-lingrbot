@@ -29,6 +29,7 @@ Lingr部屋が盛り上がってきたらYoで通知します
 !Yo -pattern /パターン/   : パターンを//内に設定できます。設定したパターンにマッチする発言があった場合、
                           : !Yo -addで登録したYoアカウントにYoを送ります
 !Yo -pattern              : !Yo -pattern /パターン/で登録したパターンを表示します
+!Yo -waitfor [Lingr ID]   : Lingr IDのユーザを登録します。その後このユーザが発言したらあなたにYoを送ります。
 !Yo -help                 : ヘルプを表示します
 
 !Yo [Yoアカウント]でのYoの通知は、あらかじめそのYoアカウントが
@@ -72,6 +73,15 @@ post '/' do
                 : LastYoAll.create(:created_at => DateTime.now)
       end
     end
+
+    WaitForUser.all(
+      :target_user   => [m['speaker_id'], m['nickname']],
+      :created_at.gt => 1.day.ago,
+    ).each {|user|
+      YoUser.first(:lingr_id => user.lingr_id).tap {|youser|
+        YoApi.yo(room.yo_api_token, youser.username) if youser
+      }
+    }.destroy
 
     case m['text']
     when /^![Yy]o\s+(\w+)$/
@@ -125,6 +135,12 @@ post '/' do
       rescue
         "指定したパターンが不正です:/#{pattern}/"
       end
+    when /^![Yy]o\s+-waitfor\s+(\S*)$/
+      WaitForUser.first_or_new({:lingr_id => m['speaker_id']}, {
+        :target_user => $1,
+        :created_at  => DateTime.now,
+      })
+      ''
     else
       YoUser.all(:lingr_id.not => m['speaker_id']).select { |u|
         u and u.pattern and /#{u.pattern}/ =~ m['text']
