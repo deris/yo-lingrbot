@@ -56,11 +56,10 @@ post '/' do
       :created_at => DateTime.parse(m['timestamp']),
     )
 
-    # DBからFEVER_MINUTE分前以前のデータ削除
-    MessageInfo.all(:created_at.lt => FEVER_MINUTE.minute.ago).destroy
-
-    # DBから過去のデータ取得(連投は１つの投稿とする)
-    messages = MessageInfo.all.chunk {|mi|
+    # DBからFEVER_MINUTE分前までのデータ取得(連投は１つの投稿とする)
+    messages = MessageInfo.all(
+      :created_at.gte => FEVER_MINUTE.minute.ago
+    ).chunk {|mi|
       [mi.room, mi.speaker_id]
     }.map {|_, v| v.first}
 
