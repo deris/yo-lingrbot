@@ -63,8 +63,8 @@ post '/' do
     prev = nil
     messages = MessageInfo.all.select do |info|
       not (prev and
-           info['room'] == prev['room'] and
-           info['speaker_id'] == prev['speaker_id']).tap {prev = info}
+           info.room == prev.room and
+           info.speaker_id == prev.speaker_id).tap {prev = info}
     end
 
     # Lingr部屋が盛り上がっていて、かつ前回Yo allしてからYO_INTERVAL分以上経過していた場合
