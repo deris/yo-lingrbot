@@ -70,12 +70,13 @@ post '/' do
     # Lingr部屋が盛り上がっていて、かつ前回Yo allしてからYO_INTERVAL分以上経過していた場合
     if messages.length >= FEVER_COUNT and
        LastYoAll.first(:created_at.lt => YO_INTERVAL.minute.ago)
-       YoApi.yo_all(room.yo_api_token)
-       last_yo = LastYoAll.first
-      if last_yo
-        last_yo.update(:created_at => DateTime.now)
-      else
-        LastYoAll.create(:created_at => DateTime.now)
+      YoApi.yo_all(room.yo_api_token)
+      LastYoAll.first.tap do |last_yo|
+        if last_yo
+          last_yo.update(:created_at => DateTime.now)
+        else
+          LastYoAll.create(:created_at => DateTime.now)
+        end
       end
     end
 
