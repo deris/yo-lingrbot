@@ -46,7 +46,7 @@ post '/' do
   json['events'].select { |e| e['message'] }.map do |e|
     m = e['message']
     room = LingrRoom.first(:name => m['room'])
-    return '' if room.nil?
+    next '' if room.nil?
 
     MessageInfo.create(
       :room       => m['room'],
