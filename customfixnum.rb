@@ -13,7 +13,7 @@ module CustomFixnumForTime
     end
 
     def ago
-      Time.now - self
+      DateTime.now - self
     end
   end
 end
